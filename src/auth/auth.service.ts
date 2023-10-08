@@ -15,16 +15,15 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async validateUser(username: string, password: string) {
+  private async hashPassword(password: string) {
     const hashingRounds = 10;
+    return await bcrypt.hash(password, hashingRounds);
+  }
 
+  async validateUser(username: string, password: string) {
     const user = await this.userService.getUserByUsername(username);
-    if (
-      user &&
-      // TODO: Fix this ASAP
-      // user.password === (await bcrypt.hash(password, hashingRounds))
-      user.password
-    ) {
+
+    if (user && (await bcrypt.compare(password, user.password))) {
       const { password, ...result } = user;
       console.log(result);
       return result;
@@ -42,22 +41,23 @@ export class AuthService {
   }
 
   async signup({ username, email, password }: SignupDto) {
-    const userExists = await this.prismaService.user.findFirst({
-      where: { email },
-    });
+    const userExists = await this.userService.getUserByEmail(email);
     if (userExists) {
       throw new ConflictException('User already exists', {
         cause: 'Duplicate email or username',
         description: 'User with same email or username already exists in db',
       });
     }
-    const newUser = await this.prismaService.user.create({
-      data: {
-        email,
-        password,
-        username,
-      },
+
+    const hashedPassword = await this.hashPassword(password);
+
+    const newUser = await this.userService.createUser({
+      username,
+      email,
+      password: hashedPassword,
     });
+
+    delete newUser.password;
     return newUser;
   }
 }
