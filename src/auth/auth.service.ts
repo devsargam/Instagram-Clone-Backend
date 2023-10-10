@@ -4,40 +4,31 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { IUserFromDb, UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { SigninDto, SignupDto } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { IUserPaylaod } from './jwt.strategy';
+
+type IUserFromDbWithoutPassword = Omit<IUserFromDb, 'password'>;
 
 @Injectable()
 export class AuthService {
   constructor(
-    private prismaService: PrismaService,
     private configService: ConfigService,
     private userService: UsersService,
     private jwtService: JwtService,
   ) {}
 
-  private async hashPassword(password: string) {
+  private async hashPassword(password: string): Promise<string> {
     const hashingRounds = 10;
     return await bcrypt.hash(password, hashingRounds);
   }
 
-  async validateUser(username: string, password: string) {
-    const user = await this.userService.getUserByUsername(username);
-
-    if (user && (await bcrypt.compare(password, user.password))) {
-      // eslint-disable-next-line
-      const { password, ...result } = user;
-      console.log(result);
-      return result;
-    }
-    return null;
-  }
-
-  async login(user: any) {
+  async login(user: IUserPaylaod): Promise<{
+    access_token: string;
+  }> {
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload, {
@@ -46,7 +37,9 @@ export class AuthService {
     };
   }
 
-  async signin({ username, password }: SigninDto) {
+  async signin({ username, password }: SigninDto): Promise<{
+    access_token: string;
+  }> {
     const userFromDb = await this.userService.getUserByUsername(username);
     if (!userFromDb) {
       throw new NotFoundException('User not found');
@@ -60,7 +53,11 @@ export class AuthService {
     return this.signToken(userFromDb.id, userFromDb.username);
   }
 
-  async signup({ username, email, password }: SignupDto) {
+  async signup({
+    username,
+    email,
+    password,
+  }: SignupDto): Promise<IUserFromDbWithoutPassword> {
     const userExists = await this.userService.getUserByEmail(email);
     if (userExists) {
       throw new ConflictException('User already exists', {
