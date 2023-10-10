@@ -1,9 +1,14 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { SignupDto } from './dto';
+import { SigninDto, SignupDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -40,6 +45,20 @@ export class AuthService {
     };
   }
 
+  async signin({ username, password }: SigninDto) {
+    const userFromDb = await this.userService.getUserByUsername(username);
+    if (!userFromDb) {
+      throw new NotFoundException('User not found');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, userFromDb.password);
+    if (!passwordMatch) {
+      throw new BadRequestException('Username or Password is wrong');
+    }
+
+    return this.signToken(userFromDb.id, userFromDb.username);
+  }
+
   async signup({ username, email, password }: SignupDto) {
     const userExists = await this.userService.getUserByEmail(email);
     if (userExists) {
@@ -59,5 +78,23 @@ export class AuthService {
 
     delete newUser.password;
     return newUser;
+  }
+
+  private async signToken(
+    id: string,
+    username: string
+  ): Promise<{ access_token: string }> {
+    const jwtSecret = this.configService.get<string>('JWT_SECRET');
+    const jwtExpiresIn = this.configService.get<string>('JWT_EXPIRES_IN');
+    const paylaod = { sub: id, username };
+
+    const token = await this.jwtService.signAsync(paylaod, {
+      expiresIn: jwtExpiresIn,
+      secret: jwtSecret,
+    });
+
+    return {
+      access_token: token,
+    };
   }
 }

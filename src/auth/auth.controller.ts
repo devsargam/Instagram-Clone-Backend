@@ -2,16 +2,15 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   Post,
-  Request,
-  UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public-route.decorator';
 import { ZodValidationPipe } from 'src/zod/zod.pipe';
-import { SignupDto, signupSchema } from './dto';
+import { SigninDto, SignupDto, signinSchema, signupSchema } from './dto';
+import { GetUser } from 'src/decorators/get-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -20,19 +19,21 @@ export class AuthController {
   @Public()
   @Post('/signup')
   @UsePipes(new ZodValidationPipe(signupSchema))
+  @HttpCode(201)
   async signup(@Body() signupDto: SignupDto) {
     return await this.authService.signup(signupDto);
   }
 
   @Public()
-  @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  @HttpCode(201)
+  @UsePipes(new ZodValidationPipe(signinSchema))
+  async login(@Body() signinDto: SigninDto) {
+    return await this.authService.signin(signinDto);
   }
 
   @Get('/profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async profile(@GetUser() user: { id: string; username: string }) {
+    return user;
   }
 }
