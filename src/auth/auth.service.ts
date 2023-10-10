@@ -17,7 +17,7 @@ export class AuthService {
     private prismaService: PrismaService,
     private configService: ConfigService,
     private userService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   private async hashPassword(password: string) {
@@ -29,6 +29,7 @@ export class AuthService {
     const user = await this.userService.getUserByUsername(username);
 
     if (user && (await bcrypt.compare(password, user.password))) {
+      // eslint-disable-next-line
       const { password, ...result } = user;
       console.log(result);
       return result;
@@ -82,7 +83,7 @@ export class AuthService {
 
   private async signToken(
     id: string,
-    username: string
+    username: string,
   ): Promise<{ access_token: string }> {
     const jwtSecret = this.configService.get<string>('JWT_SECRET');
     const jwtExpiresIn = this.configService.get<string>('JWT_EXPIRES_IN');
