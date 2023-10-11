@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { IUserFromDb, UsersService } from 'src/users/users.service';
+import { MailService } from 'src/mail/mail.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -19,6 +20,7 @@ export class AuthService {
     private configService: ConfigService,
     private userService: UsersService,
     private jwtService: JwtService,
+    private mailService: MailService,
   ) {}
 
   private async hashPassword(password: string): Promise<string> {
@@ -75,6 +77,7 @@ export class AuthService {
     });
 
     delete newUser.password;
+    this.mailService.sendUserConfirmation(newUser, newUser.id);
     return newUser;
   }
 
