@@ -1,18 +1,17 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { IUserFromDb, UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/users.service';
 import { MailService } from 'src/mail/mail.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { SigninDto, SignupDto } from './dto';
 import { IUserPaylaod } from './jwt.strategy';
-
-type IUserFromDbWithoutPassword = Omit<IUserFromDb, 'password'>;
 
 @Injectable()
 export class AuthService {
@@ -39,27 +38,35 @@ export class AuthService {
     };
   }
 
-  async signin({ username, password }: SigninDto): Promise<{
-    access_token: string;
-  }> {
+  async signin({
+    username,
+    password,
+  }: SigninDto): Promise<{ access_token: string }> {
     const userFromDb = await this.userService.getUserByUsername(username);
+    // Throw error if user is not found in db
     if (!userFromDb) {
       throw new NotFoundException('User not found');
     }
 
+    // Throw error if user has not verified email
+    if (!userFromDb.isVerified) {
+      this.mailService.sendUserConfirmation(userFromDb, userFromDb.id);
+      throw new ForbiddenException(
+        'Message user not verified. Check your mail',
+      );
+    }
+
     const passwordMatch = await bcrypt.compare(password, userFromDb.password);
     if (!passwordMatch) {
+      // Throw error if password doesn't match
       throw new BadRequestException('Username or Password is wrong');
     }
 
+    // Return JWT token
     return this.signToken(userFromDb.id, userFromDb.username);
   }
 
-  async signup({
-    username,
-    email,
-    password,
-  }: SignupDto): Promise<IUserFromDbWithoutPassword> {
+  async signup({ username, email, password }: SignupDto) {
     const userExists = await this.userService.getUserByEmail(email);
     if (userExists) {
       throw new ConflictException('User already exists', {
@@ -78,7 +85,17 @@ export class AuthService {
 
     delete newUser.password;
     this.mailService.sendUserConfirmation(newUser, newUser.id);
-    return newUser;
+    return {
+      message: 'Verification mail sent. Check your mail',
+      status: 201,
+    };
+  }
+
+  async verifyToken(token: string) {
+    console.log(token);
+    const verifiedUser = await this.userService.verifyUser(token);
+    delete verifiedUser.password;
+    return verifiedUser;
   }
 
   private async signToken(

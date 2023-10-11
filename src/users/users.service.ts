@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { SignupDto } from 'src/auth/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -28,6 +28,26 @@ export class UsersService {
         username,
       },
     });
+  }
+
+  async getUserById(id: string): Promise<IUserFromDb> {
+    return await this.prismaService.user.findFirst({
+      where: { id },
+    });
+  }
+
+  async verifyUser(id: string): Promise<IUserFromDb> {
+    try {
+      return await this.prismaService.user.update({
+        where: { id },
+        data: {
+          isVerified: true,
+        },
+      });
+    } catch (e) {
+      // If user is not found with the token throw
+      throw new NotFoundException('Invalid token');
+    }
   }
 
   async createUser({

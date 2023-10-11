@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   Post,
+  Query,
   UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -30,6 +31,12 @@ export class AuthController {
   @UsePipes(new ZodValidationPipe(signinSchema))
   async login(@Body() signinDto: SigninDto) {
     return await this.authService.signin(signinDto);
+  }
+
+  @Public()
+  @Get('/confirm')
+  async verifyToken(@Query() { token }: { token: string }) {
+    return await this.authService.verifyToken(token);
   }
 
   @Get('/profile')
