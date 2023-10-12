@@ -24,4 +24,22 @@ export class MailService {
       html: `<a href='${url}'>Click Here!</a>`,
     });
   }
+
+  async sendUserForgotInstructions(user: IUserFromDb, token: string) {
+    const serverUrl = this.configService.get<string>('SERVER_URL');
+    const url = `${serverUrl}/auth/forgotpass?code=${token}`;
+
+    await this.transporter.sendMail({
+      to: user.email,
+      subject: 'Instagram Password Reset',
+      html: `<h1>Dear Instagram User</h1>
+            We have received a request to reset your instagram password
+            <br>
+            username: ${user.username}
+            Please click <a href=${url}>here</a> to reset your password
+
+            The Instagram Team
+      `,
+    });
+  }
 }

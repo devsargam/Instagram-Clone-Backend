@@ -22,9 +22,9 @@ export class AuthService {
     private mailService: MailService,
   ) {}
 
-  private async hashPassword(password: string): Promise<string> {
+  private async createHash(stringToHash: string): Promise<string> {
     const hashingRounds = 10;
-    return await bcrypt.hash(password, hashingRounds);
+    return await bcrypt.hash(stringToHash, hashingRounds);
   }
 
   async login(user: IUserPaylaod): Promise<{
@@ -75,7 +75,7 @@ export class AuthService {
       });
     }
 
-    const hashedPassword = await this.hashPassword(password);
+    const hashedPassword = await this.createHash(password);
 
     const newUser = await this.userService.createUser({
       username,
@@ -96,6 +96,21 @@ export class AuthService {
     const verifiedUser = await this.userService.verifyUser(token);
     delete verifiedUser.password;
     return verifiedUser;
+  }
+
+  async forgotPassword(username: string) {
+    const userFromDb = await this.userService.getUserByUsername(username);
+    if (!userFromDb) {
+      throw new ForbiddenException('User does not exists');
+    }
+    const uniqueString =
+      username + this.configService.get<string>('FORGOT_PASSWORD_SECRET');
+    const hashedString = await this.createHash(uniqueString);
+    await this.mailService.sendUserForgotInstructions(userFromDb, hashedString);
+    return {
+      message: 'Forgot password mail was sent to associated email',
+      status: 201,
+    };
   }
 
   private async signToken(
