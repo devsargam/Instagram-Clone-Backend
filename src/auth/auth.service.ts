@@ -8,6 +8,7 @@ import {
 import { UsersService } from 'src/users/users.service';
 import { MailService } from 'src/mail/mail.service';
 import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { SigninDto, SignupDto } from './dto';
@@ -92,7 +93,6 @@ export class AuthService {
   }
 
   async verifyToken(token: string) {
-    console.log(token);
     const verifiedUser = await this.userService.verifyUser(token);
     delete verifiedUser.password;
     return verifiedUser;
@@ -106,10 +106,33 @@ export class AuthService {
     const uniqueString =
       username + this.configService.get<string>('FORGOT_PASSWORD_SECRET');
     const hashedString = await this.createHash(uniqueString);
-    await this.mailService.sendUserForgotInstructions(userFromDb, hashedString);
+    this.mailService.sendUserForgotInstructions(userFromDb, hashedString);
     return {
       message: 'Forgot password mail was sent to associated email',
       status: 201,
+    };
+  }
+
+  async verifyForgotPass(token: string, username: string) {
+    const userFromDb = await this.userService.getUserByUsername(username);
+
+    if (!userFromDb) {
+      throw new ForbiddenException('Something went wrong');
+    }
+    const stringToCompare =
+      username + this.configService.get<string>('FORGOT_PASSWORD_SECRET');
+    const isEqual = await bcrypt.compare(stringToCompare, token);
+    if (!isEqual) {
+      throw new ForbiddenException('Something went wrong');
+    }
+    const newPassword = randomBytes(15).toString('hex');
+    const newHashedPassword = await this.createHash(newPassword);
+    await this.userService.resetPassword(username, newHashedPassword);
+
+    this.mailService.sendUserPasswordReset(userFromDb, newPassword);
+    return {
+      message: 'Password has been reset. Check your mail',
+      status: '200',
     };
   }
 

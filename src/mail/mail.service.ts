@@ -25,9 +25,22 @@ export class MailService {
     });
   }
 
+  async sendUserPasswordReset(user: IUserFromDb, newPassword: string) {
+    await this.transporter.sendMail({
+      to: user.email,
+      subject: 'Instagram Password Has Been Reset',
+      html: `<h1>Dear Instagram User</h1>
+            Your Instagram passowrd reset was sucessful<br>
+            Your new Password is: <b>${newPassword}</b><br>
+            <br>
+            <h2>The Instagram Team</h2>
+            `,
+    });
+  }
+
   async sendUserForgotInstructions(user: IUserFromDb, token: string) {
     const serverUrl = this.configService.get<string>('SERVER_URL');
-    const url = `${serverUrl}/auth/forgotpass?code=${token}`;
+    const url = `${serverUrl}/auth/forgotpass/verify?code=${token}&user=${user.username}`;
 
     await this.transporter.sendMail({
       to: user.email,
@@ -35,9 +48,9 @@ export class MailService {
       html: `<h1>Dear Instagram User</h1>
             We have received a request to reset your instagram password
             <br>
-            username: ${user.username}
-            Please click <a href=${url}>here</a> to reset your password
-
+            username: ${user.username}<br>
+            Please click <strong><a href=${url}>here</a></strong> to reset your password<br>
+            <br>
             The Instagram Team
       `,
     });

@@ -50,6 +50,18 @@ export class UsersService {
     }
   }
 
+  async resetPassword(
+    username: string,
+    newPassword: string,
+  ): Promise<IUserFromDb> {
+    return await this.prismaService.user.update({
+      where: { username },
+      data: {
+        password: newPassword,
+      },
+    });
+  }
+
   async createUser({
     email,
     password,
