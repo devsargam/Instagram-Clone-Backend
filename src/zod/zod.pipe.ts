@@ -11,10 +11,11 @@ export class ZodValidationPipe implements PipeTransform {
 
   async transform(
     value: unknown,
-    // eslint-disable-next-line
     metadata: ArgumentMetadata,
   ): Promise<unknown> {
     try {
+      // Only use pipe for body
+      if (metadata.type !== 'body') return;
       await this.schema.parseAsync(value);
     } catch (error) {
       // Send user the first error in the schema
