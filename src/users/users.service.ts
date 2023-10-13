@@ -1,6 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { SignupDto } from 'src/auth/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { changePasswordDto } from './dto';
+import { compare, hash } from 'bcrypt';
 
 export interface IUserFromDb {
   id: string;
@@ -60,6 +66,29 @@ export class UsersService {
         password: newPassword,
       },
     });
+  }
+
+  async changePassword(id: string, body: changePasswordDto) {
+    const { password, new_password } = body;
+    const user = await this.prismaService.user.findFirst({ where: { id } });
+    if (!user) {
+      throw new ForbiddenException('Invalid id');
+    }
+    const isMatch = await compare(password, user.password);
+    if (!isMatch) {
+      throw new ForbiddenException('Wrong password');
+    }
+    const hashingRounds = 10;
+    const hashedPassword = await hash(new_password, hashingRounds);
+    await this.prismaService.user.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
+
+    return {
+      message: 'Password changed sucessfully',
+      status: 201,
+    };
   }
 
   async createUser({

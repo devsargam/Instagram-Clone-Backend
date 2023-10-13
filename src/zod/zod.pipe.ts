@@ -9,10 +9,13 @@ export class ZodValidationPipe implements PipeTransform {
   // eslint-disable-next-line
   constructor(private schema: ZodObject<any>) {}
 
-  // eslint-disable-next-line
-  transform(value: unknown, metadata: ArgumentMetadata): unknown {
+  async transform(
+    value: unknown,
+    // eslint-disable-next-line
+    metadata: ArgumentMetadata,
+  ): Promise<unknown> {
     try {
-      this.schema.parse(value);
+      await this.schema.parseAsync(value);
     } catch (error) {
       // Send user the first error in the schema
       throw new BadRequestException(error.errors[0].message);
