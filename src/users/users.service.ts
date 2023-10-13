@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -7,6 +8,7 @@ import { SignupDto } from 'src/auth/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { changePasswordDto } from './dto';
 import { compare, hash } from 'bcrypt';
+import { changeUsernameDto } from './dto/change-username.dto';
 
 export interface IUserFromDb {
   id: string;
@@ -89,6 +91,40 @@ export class UsersService {
       message: 'Password changed sucessfully',
       status: 201,
     };
+  }
+
+  async changeUsername(id: string, body: changeUsernameDto) {
+    const { new_username, password } = body;
+    const userFromDb = await this.prismaService.user.findFirst({
+      where: { id },
+    });
+
+    if (!userFromDb) {
+      throw new ForbiddenException('Invalid id');
+    }
+    const isMatch = await compare(password, userFromDb.password);
+    if (!isMatch) {
+      throw new ForbiddenException('Wrong password');
+    }
+    const userExists = await this.prismaService.user.findFirst({
+      where: {
+        username: new_username,
+      },
+    });
+
+    if (userExists) {
+      throw new ConflictException('User with same username already exists');
+    }
+
+    return await this.prismaService.user.update({
+      where: { id },
+      data: { username: new_username },
+      select: {
+        id: true,
+        username: true,
+        isVerified: true,
+      },
+    });
   }
 
   async createUser({

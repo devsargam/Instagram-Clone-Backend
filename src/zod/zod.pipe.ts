@@ -15,7 +15,7 @@ export class ZodValidationPipe implements PipeTransform {
   ): Promise<unknown> {
     try {
       // Only use pipe for body
-      if (metadata.type !== 'body') return;
+      if (metadata.type !== 'body') return value;
       await this.schema.parseAsync(value);
     } catch (error) {
       // Send user the first error in the schema
