@@ -46,12 +46,12 @@ export class MailService {
       to: user.email,
       subject: 'Instagram Password Reset',
       html: `<h1>Dear Instagram User</h1>
-            We have received a request to reset your instagram password
+            <p>We have received a request to reset your instagram password</p>
             <br>
-            username: ${user.username}<br>
-            Please click <strong><a href=${url}>here</a></strong> to reset your password<br>
+            <p>username: <strong>${user.username}</strong><br></p>
+            <p>Please click <strong><a href=${url}>here</a></strong> to reset your password</p><br>
             <br>
-            The Instagram Team
+            <h2>The Instagram Team</h2>
       `,
     });
   }
