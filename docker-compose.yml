@@ -11,5 +11,12 @@ services:
       - 5432:5432
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+  mailhog:
+    image: mailhog/mailhog:latest
+    platform: linux/amd64
+    restart: always
+    ports:
+      - 1025:1025
+      - 8025:8025
 volumes:
   postgres-data:
