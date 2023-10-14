@@ -8,10 +8,14 @@ export class MailService {
   private transporter: Transporter;
 
   constructor(private readonly configService: ConfigService) {
-    this.transporter = createTransport(`smtp://
-        ${configService.get('GOOGLE_AUTH_USERNAME')}:
-        ${configService.get('GOOGLE_AUTH_PASSWORD')}
-        @smtp.gmail.com`);
+    this.transporter = createTransport({
+      host: configService.get('SMTP_HOST'),
+      port: configService.get<number>('SMTP_PORT'),
+      auth: {
+        user: configService.get('SMTP_USERNAME'),
+        pass: configService.get('SMTP_PASSWORD'),
+      },
+    });
   }
 
   async sendUserConfirmation(user: IUserFromDb, token: string) {
@@ -19,6 +23,7 @@ export class MailService {
     const url = `${serverUrl}/auth/confirm?token=${token}`;
 
     await this.transporter.sendMail({
+      from: `noreply ${this.configService.get<string>('MAIL_FROM')}`,
       to: user.email,
       subject: 'Welcome to Test App',
       html: `<a href='${url}'>Click Here!</a>`,
