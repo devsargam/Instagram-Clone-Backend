@@ -41,10 +41,18 @@ enum AccountType {
   PRIVATE
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  PREFER_NOT_SAY
+}
+
 model UserPreferences {
   id                      String      @id @default(uuid())
   bio                     String
   receiveMarkettingEmails Boolean     @default(false)
+  website                 String
+  gender                  Gender      @default(PREFER_NOT_SAY)
   accountType             AccountType @default(PUBLIC)
 
   user   User   @relation(fields: [userId], references: [id])
