@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Put, UsePipes } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, UsePipes } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ZodValidationPipe } from 'src/zod/zod.pipe';
 import { changePasswordDto, changePasswordSchema } from './dto';
@@ -6,6 +6,7 @@ import {
   changeUsernameDto,
   changeUsernameSchema,
 } from './dto/change-username.dto';
+import { editProfileDto, editProfileSchema } from './dto/edit-profile.dto';
 
 @Controller('users')
 export class UsersController {
@@ -28,6 +29,15 @@ export class UsersController {
   ) {
     console.log(userId);
     console.log(body);
-    return this.userService.changeUsername(userId, body);
+    this.userService.changeUsername(userId, body);
+  }
+
+  @Post('/edit')
+  @UsePipes(new ZodValidationPipe(editProfileSchema))
+  async editProfile(@Body() body: editProfileDto) {
+    console.log(body);
+    return {
+      status: 'ok',
+    };
   }
 }

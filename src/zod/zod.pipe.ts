@@ -19,6 +19,7 @@ export class ZodValidationPipe implements PipeTransform {
       await this.schema.parseAsync(value);
     } catch (error) {
       // Send user the first error in the schema
+      console.log(error);
       throw new BadRequestException(error.errors[0].message);
     }
     return value;
