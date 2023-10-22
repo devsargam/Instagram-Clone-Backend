@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { MailModule } from './mail/mail.module';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { MailModule } from './mail/mail.module';
     PrismaModule,
     AuthModule,
     MailModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [
