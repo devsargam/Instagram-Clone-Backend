@@ -62,8 +62,8 @@ devDependencies:
     specifier: ^10.0.0
     version: 10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/platform-express@10.0.0)
   '@types/bcrypt':
-    specifier: ^5.0.0
-    version: 5.0.0
+    specifier: ^5.0.1
+    version: 5.0.1
   '@types/express':
     specifier: ^4.17.17
     version: 4.17.17
@@ -1189,8 +1189,8 @@ packages:
       '@babel/types': 7.23.0
     dev: true
 
-  /@types/bcrypt@5.0.0:
-    resolution: {integrity: sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==}
+  /@types/bcrypt@5.0.1:
+    resolution: {integrity: sha512-dIIrEsLV1/v0AUNI8oHMaRRTSeVjoy5ID8oclJavtPj8CwPJoD1eFoNXEypuu6k091brEzBeOo3LlxeAH9zRZg==}
     dependencies:
       '@types/node': 20.3.1
     dev: true
