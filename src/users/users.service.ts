@@ -97,6 +97,23 @@ export class UsersService {
     };
   }
 
+  async getProfile(user: IJwtUser) {
+    const userPrefernces = await this.prismaService.userPreferences.findFirst({
+      where: {
+        userId: user.id,
+      },
+      select: {
+        bio: true,
+        website: true,
+        gender: true,
+        accountType: true,
+        receiveMarkettingEmails: true,
+      },
+    });
+
+    return userPrefernces;
+  }
+
   async changePassword(id: string, body: changePasswordDto) {
     const { password, new_password } = body;
     const user = await this.prismaService.user.findFirst({ where: { id } });

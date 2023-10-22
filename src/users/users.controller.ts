@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post, Put, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UsePipes,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ZodValidationPipe } from 'src/zod/zod.pipe';
 import { changePasswordDto, changePasswordSchema } from './dto';
@@ -32,9 +40,14 @@ export class UsersController {
     return this.userService.changeUsername(userId, body);
   }
 
-  @Post('/edit')
+  @Post('/preferences')
   @UsePipes(new ZodValidationPipe(editProfileSchema))
   async editProfile(@Body() body: editProfileDto, @GetUser() user: IJwtUser) {
     return this.userService.editProfile(user, body);
+  }
+
+  @Get('/preferences/')
+  async getProfile(@GetUser() user: IJwtUser) {
+    return this.userService.getProfile(user);
   }
 }
