@@ -19,8 +19,12 @@ export class PostsService {
     return newPost;
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll(user: IJwtUser) {
+    return await this.prismaService.post.findMany({
+      where: {
+        authorId: user.id,
+      },
+    });
   }
 
   findOne(id: number) {

@@ -22,8 +22,8 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  findAll(@GetUser() user: IJwtUser) {
+    return this.postsService.findAll(user);
   }
 
   @Get(':id')
