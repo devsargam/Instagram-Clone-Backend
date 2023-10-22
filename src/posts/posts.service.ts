@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { IJwtUser } from 'src/interfaces';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -27,15 +27,28 @@ export class PostsService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string) {
+    return await this.prismaService.post.findFirstOrThrow({
+      where: {
+        id: id,
+      },
+    });
   }
 
   update(id: number) {
     return `This action updates a #${id} post`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string, user: IJwtUser) {
+    try {
+      return await this.prismaService.post.delete({
+        where: {
+          id: id,
+          authorId: user.id,
+        },
+      });
+    } catch {
+      throw new NotFoundException('Post not found');
+    }
   }
 }
