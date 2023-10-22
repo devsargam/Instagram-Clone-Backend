@@ -32,6 +32,12 @@ Setup the necessary environment variables
 copy .env.example .env
 ```
 
+Run `mailhog` & `Postgres database`
+
+```
+docker compose up
+```
+
 Run the migrations with
 
 ```
