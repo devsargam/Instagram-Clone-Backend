@@ -49,9 +49,9 @@ enum Gender {
 
 model UserPreferences {
   id                      String      @id @default(uuid())
-  bio                     String
+  bio                     String?
   receiveMarkettingEmails Boolean     @default(false)
-  website                 String
+  website                 String?
   gender                  Gender      @default(PREFER_NOT_SAY)
   accountType             AccountType @default(PUBLIC)
 
