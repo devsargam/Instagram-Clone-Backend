@@ -65,7 +65,7 @@ devDependencies:
     specifier: ^10.2.7
     version: 10.2.7(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(@nestjs/platform-express@10.0.0)
   '@types/bcrypt':
-    specifier: ^5.0.1
+    specifier: ^5.0.0
     version: 5.0.1
   '@types/express':
     specifier: ^4.17.17
