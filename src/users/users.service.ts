@@ -9,6 +9,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { changePasswordDto } from './dto';
 import { compare, hash } from 'bcrypt';
 import { changeUsernameDto } from './dto/change-username.dto';
+import { IJwtUser } from 'src/interfaces';
+import { editProfileDto } from './dto/edit-profile.dto';
 
 export interface IUserFromDb {
   id: string;
@@ -68,6 +70,31 @@ export class UsersService {
         password: newPassword,
       },
     });
+  }
+
+  async editProfile(user: IJwtUser, body: editProfileDto) {
+    type IAccountEnum = 'PUBLIC' | 'PRIVATE';
+    type IGenderEnum = 'MALE' | 'FEMALE' | 'PREFER_NOT_SAY';
+    const { bio, accountType, gender, receiveMarkettingEmails, website } = body;
+
+    await this.prismaService.userPreferences.update({
+      where: {
+        userId: user.id,
+      },
+      data: {
+        bio,
+        website,
+        accountType: accountType as IAccountEnum,
+        gender: gender as IGenderEnum,
+        receiveMarkettingEmails,
+        userId: user.id,
+      },
+    });
+
+    return {
+      message: 'Preferences updated sucessfully',
+      status: 201,
+    };
   }
 
   async changePassword(id: string, body: changePasswordDto) {
@@ -137,6 +164,9 @@ export class UsersService {
         email,
         password,
         username,
+        UserPreferences: {
+          create: {},
+        },
       },
     });
     return newUser;

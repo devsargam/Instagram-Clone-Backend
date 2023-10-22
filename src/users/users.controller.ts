@@ -7,6 +7,8 @@ import {
   changeUsernameSchema,
 } from './dto/change-username.dto';
 import { editProfileDto, editProfileSchema } from './dto/edit-profile.dto';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { IJwtUser } from 'src/interfaces';
 
 @Controller('users')
 export class UsersController {
@@ -27,17 +29,12 @@ export class UsersController {
     @Param('id') userId: string,
     @Body() body: changeUsernameDto,
   ) {
-    console.log(userId);
-    console.log(body);
-    this.userService.changeUsername(userId, body);
+    return this.userService.changeUsername(userId, body);
   }
 
   @Post('/edit')
   @UsePipes(new ZodValidationPipe(editProfileSchema))
-  async editProfile(@Body() body: editProfileDto) {
-    console.log(body);
-    return {
-      status: 'ok',
-    };
+  async editProfile(@Body() body: editProfileDto, @GetUser() user: IJwtUser) {
+    return this.userService.editProfile(user, body);
   }
 }
