@@ -8,15 +8,15 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ZodValidationPipe } from 'src/zod/zod.pipe';
+import { ZodValidationPipe } from 'src/common/pipes/zod.pipe';
 import { changePasswordDto, changePasswordSchema } from './dto';
 import {
   changeUsernameDto,
   changeUsernameSchema,
 } from './dto/change-username.dto';
 import { editProfileDto, editProfileSchema } from './dto/edit-profile.dto';
-import { GetUser } from 'src/decorators/get-user.decorator';
-import { IJwtUser } from 'src/interfaces';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { IJwtUser } from 'src/shared/interfaces';
 
 @Controller('users')
 export class UsersController {

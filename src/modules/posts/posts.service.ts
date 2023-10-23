@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
-import { IJwtUser } from 'src/interfaces';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { IJwtUser } from 'src/shared/interfaces';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()

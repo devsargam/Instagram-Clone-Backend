@@ -4,12 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { SignupDto } from 'src/auth/dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { SignupDto } from 'src/modules/auth/dto';
+import { PrismaService } from 'src/modules/prisma/prisma.service';
 import { changePasswordDto } from './dto';
 import { compare, hash } from 'bcrypt';
 import { changeUsernameDto } from './dto/change-username.dto';
-import { IJwtUser } from 'src/interfaces';
+import { IJwtUser } from 'src/shared/interfaces';
 import { editProfileDto } from './dto/edit-profile.dto';
 
 export interface IUserFromDb {

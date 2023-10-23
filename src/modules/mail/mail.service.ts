@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IUserFromDb } from 'src/users/users.service';
+import { IUserFromDb } from 'src/modules/users/users.service';
 import { Transporter, createTransport } from 'nodemailer';
 
 @Injectable()

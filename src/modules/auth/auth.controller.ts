@@ -8,10 +8,10 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Public } from 'src/decorators/public-route.decorator';
-import { ZodValidationPipe } from 'src/zod/zod.pipe';
+import { Public } from 'src/common/decorators/public-route.decorator';
+import { ZodValidationPipe } from 'src/common/pipes/zod.pipe';
 import { SigninDto, SignupDto, signinSchema, signupSchema } from './dto';
-import { GetUser } from 'src/decorators/get-user.decorator';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
 
 @Controller('auth')
 export class AuthController {

@@ -9,15 +9,15 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { GetUser } from 'src/decorators/get-user.decorator';
-import { IJwtUser } from 'src/interfaces';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { IJwtUser } from 'src/shared/interfaces';
 import {
   CreatePostDto,
   UpdatePostDto,
   createPostSchema,
   updatePostSchema,
 } from './dto';
-import { ZodValidationPipe } from 'src/zod/zod.pipe';
+import { ZodValidationPipe } from 'src/common/pipes/zod.pipe';
 
 @Controller('posts')
 export class PostsController {
