@@ -32,6 +32,7 @@ export class MailService {
 
   async sendUserPasswordReset(user: IUserFromDb, newPassword: string) {
     await this.transporter.sendMail({
+      from: `noreply ${this.configService.get<string>('MAIL_FROM')}`,
       to: user.email,
       subject: 'Instagram Password Has Been Reset',
       html: `<h1>Dear Instagram User</h1>
@@ -48,6 +49,7 @@ export class MailService {
     const url = `${serverUrl}/auth/forgotpass/verify?code=${token}&user=${user.username}`;
 
     await this.transporter.sendMail({
+      from: `noreply ${this.configService.get<string>('MAIL_FROM')}`,
       to: user.email,
       subject: 'Instagram Password Reset',
       html: `<h1>Dear Instagram User</h1>
