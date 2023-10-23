@@ -63,4 +63,14 @@ export class PostsController {
   removeLike(@Param('id') id: string, @GetUser() user: IJwtUser) {
     return this.postsService.removeLike(id, user);
   }
+
+  @Post(':id/add-to-save')
+  savePost(@Param('id') id: string, @GetUser() user: IJwtUser) {
+    return this.postsService.savePost(id, user);
+  }
+
+  @Post(':id/remove-from-saved')
+  unsavePost(@Param('id') id: string, @GetUser() user: IJwtUser) {
+    return this.postsService.unsavePost(id, user);
+  }
 }

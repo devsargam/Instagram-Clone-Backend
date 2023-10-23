@@ -122,4 +122,54 @@ export class PostsService {
       throw new NotFoundException('Post not found');
     }
   }
+
+  async savePost(id: string, user: IJwtUser) {
+    try {
+      await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          savedPosts: {
+            connect: {
+              id: id,
+            },
+          },
+        },
+      });
+
+      return {
+        message: 'Post saved successfully',
+        postId: id,
+        timestamp: new Date(),
+      };
+    } catch {
+      throw new NotFoundException('Post not found');
+    }
+  }
+
+  async unsavePost(id: string, user: IJwtUser) {
+    try {
+      await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          savedPosts: {
+            disconnect: {
+              id: id,
+            },
+          },
+        },
+      });
+
+      return {
+        message: 'Post unsaved successfully',
+        postId: id,
+        timestamp: new Date(),
+      };
+    } catch {
+      throw new NotFoundException('Post not found');
+    }
+  }
 }
