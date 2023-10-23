@@ -6,17 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { IJwtUser } from 'src/interfaces';
-import { CreatePostDto, UpdatePostDto } from './dto';
+import {
+  CreatePostDto,
+  UpdatePostDto,
+  createPostSchema,
+  updatePostSchema,
+} from './dto';
+import { ZodValidationPipe } from 'src/zod/zod.pipe';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
+  @UsePipes(new ZodValidationPipe(createPostSchema))
   create(@Body() createPostDto: CreatePostDto, @GetUser() user: IJwtUser) {
     return this.postsService.create(user, createPostDto);
   }
@@ -32,6 +40,7 @@ export class PostsController {
   }
 
   @Patch(':id')
+  @UsePipes(new ZodValidationPipe(updatePostSchema))
   update(
     @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,
