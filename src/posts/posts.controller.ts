@@ -8,10 +8,9 @@ import {
   Delete,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { IJwtUser } from 'src/interfaces';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostDto, UpdatePostDto } from './dto';
 
 @Controller('posts')
 export class PostsController {
