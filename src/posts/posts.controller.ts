@@ -11,6 +11,7 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { IJwtUser } from 'src/interfaces';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -32,8 +33,12 @@ export class PostsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string) {
-    return this.postsService.update(+id);
+  update(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+    @GetUser() user: IJwtUser,
+  ) {
+    return this.postsService.update(id, updatePostDto, user);
   }
 
   @Delete(':id')

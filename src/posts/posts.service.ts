@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { IJwtUser } from 'src/interfaces';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -35,8 +36,20 @@ export class PostsService {
     });
   }
 
-  update(id: number) {
-    return `This action updates a #${id} post`;
+  async update(id: string, updatePostDto: UpdatePostDto, user: IJwtUser) {
+    try {
+      return await this.prismaService.post.update({
+        where: {
+          id: id,
+          authorId: user.id,
+        },
+        data: {
+          ...updatePostDto,
+        },
+      });
+    } catch {
+      throw new NotFoundException('Post was not found');
+    }
   }
 
   async remove(id: string, user: IJwtUser) {
