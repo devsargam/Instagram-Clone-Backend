@@ -53,4 +53,14 @@ export class PostsController {
   remove(@Param('id') id: string, @GetUser() user: IJwtUser) {
     return this.postsService.remove(id, user);
   }
+
+  @Post(':id/like')
+  like(@Param('id') id: string, @GetUser() user: IJwtUser) {
+    return this.postsService.like(id, user);
+  }
+
+  @Post(':id/removelike')
+  removeLike(@Param('id') id: string, @GetUser() user: IJwtUser) {
+    return this.postsService.removeLike(id, user);
+  }
 }
