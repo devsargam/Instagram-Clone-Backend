@@ -21,19 +21,27 @@ export class PostsService {
   }
 
   async findAll(user: IJwtUser) {
-    return await this.prismaService.post.findMany({
+    const posts = await this.prismaService.post.findMany({
       where: {
         authorId: user.id,
       },
     });
+    if (!posts.length) {
+      throw new NotFoundException('No post exists');
+    }
+    return posts;
   }
 
   async findOne(id: string) {
-    return await this.prismaService.post.findFirstOrThrow({
-      where: {
-        id: id,
-      },
-    });
+    try {
+      return await this.prismaService.post.findFirstOrThrow({
+        where: {
+          id: id,
+        },
+      });
+    } catch {
+      throw new NotFoundException('Post not found');
+    }
   }
 
   async update(id: string, updatePostDto: UpdatePostDto, user: IJwtUser) {
@@ -48,7 +56,7 @@ export class PostsService {
         },
       });
     } catch {
-      throw new NotFoundException('Post was not found');
+      throw new NotFoundException('Post not found');
     }
   }
 
