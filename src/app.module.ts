@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 import { MailModule } from './modules/mail/mail.module';
 import { PostsModule } from './modules/posts/posts.module';
+import { CommentsModule } from './modules/comments/comments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PostsModule } from './modules/posts/posts.module';
     AuthModule,
     MailModule,
     PostsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [
