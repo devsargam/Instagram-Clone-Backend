@@ -22,6 +22,7 @@ model User {
   likedPosts   Post[] @relation("Likes")
 
   UserPreferences UserPreferences?
+  comments        Comment[]        @relation("Commented")
 }
 
 model Post {
@@ -34,8 +35,19 @@ model Post {
   author   User   @relation("Created", fields: [authorId], references: [id])
   authorId String
 
-  savedBy User[] @relation("Posts")
-  likes   User[] @relation("Likes")
+  savedBy  User[]    @relation("Posts")
+  likes    User[]    @relation("Likes")
+  comments Comment[]
+}
+
+model Comment {
+  id      String @id @default(uuid())
+  content String
+
+  commenedBy    User?   @relation("Commented", fields: [commentUserId], references: [id])
+  commentUserId String
+  Post          Post?   @relation(fields: [postId], references: [id])
+  postId        String?
 }
 
 enum AccountType {
