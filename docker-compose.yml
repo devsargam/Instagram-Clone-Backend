@@ -1,5 +1,15 @@
 version: '3'
 services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    networks:
+      - instagram-backend
+    depends_on:
+      - postgres-db
+    env_file:
+      - .env
   postgres-db:
     image: postgres:9.6
     restart: always
@@ -10,7 +20,9 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - instagram-backend
   mailhog:
     image: mailhog/mailhog:latest
     platform: linux/amd64
@@ -18,5 +30,9 @@ services:
     ports:
       - 1025:1025
       - 8025:8025
+    networks:
+      - instagram-backend
 volumes:
   postgres-data:
+networks:
+  instagram-backend:
