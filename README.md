@@ -32,10 +32,30 @@ Setup the necessary environment variables
 copy .env.example .env
 ```
 
+### Completly with docker
+
+<details>
+<summary> 
+Click Me
+</summary>
+
+```bash
+docker compose up
+```
+
+</details>
+
+### With docker as db & mailhog provider (Recommend for development)
+
+<details>
+<summary> 
+Click Me
+</summary>
+
 Run `mailhog` & `Postgres database`
 
 ```
-docker compose up
+docker compose up postgres-db mailhog
 ```
 
 Run the migrations with
@@ -49,6 +69,8 @@ Run the server
 ```
 pnpm start:dev
 ```
+
+</details>
 
 ## Tests
 
