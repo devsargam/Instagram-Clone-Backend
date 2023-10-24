@@ -17,12 +17,15 @@ model User {
   password   String
   isVerified Boolean @default(false)
 
-  createdPosts Post[] @relation("Created")
-  savedPosts   Post[] @relation("Posts")
-  likedPosts   Post[] @relation("Likes")
+  createdPosts Post[]    @relation("Created")
+  savedPosts   Post[]    @relation("Posts")
+  likedPosts   Post[]    @relation("Likes")
+  comments     Comment[] @relation("Commented")
 
   UserPreferences UserPreferences?
-  comments        Comment[]        @relation("Commented")
+
+  followedBy User[] @relation("UserFollows")
+  following  User[] @relation("UserFollows")
 }
 
 model Post {
