@@ -10,6 +10,9 @@ services:
       - postgres-db
     env_file:
       - .env
+    environment:
+      - SMTP_HOST=mailhog
+      - DATABASE_URL=postgresql://postgres:postgres@postgres-db:5432/instagram?schema=public
   postgres-db:
     image: postgres:9.6
     restart: always
