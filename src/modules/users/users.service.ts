@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -187,5 +188,32 @@ export class UsersService {
       },
     });
     return newUser;
+  }
+
+  async follow(userId: string, user: IJwtUser) {
+    if (user.id === userId)
+      throw new BadRequestException('You cannot follow yourself');
+    try {
+      const userFromDb = await this.prismaService.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          followedBy: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+        select: {
+          followedBy: true,
+          following: true,
+        },
+      });
+
+      return userFromDb;
+    } catch {
+      throw new NotFoundException('User not found');
+    }
   }
 }

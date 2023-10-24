@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -49,5 +50,10 @@ export class UsersController {
   @Get('/preferences/')
   async getProfile(@GetUser() user: IJwtUser) {
     return this.userService.getProfile(user);
+  }
+
+  @Post('/:id/follow')
+  async follow(@GetUser() user: IJwtUser, @Param('id') userId: string) {
+    return this.userService.follow(userId, user);
   }
 }
