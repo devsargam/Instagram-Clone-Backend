@@ -243,4 +243,37 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
   }
+
+  async getFollowers(userId: string) {
+    try {
+      const userFromDb = await this.prismaService.user.findFirst({
+        where: {
+          id: userId,
+        },
+        select: {
+          followedBy: true,
+        },
+      });
+      return userFromDb.followedBy;
+    } catch {
+      throw new NotFoundException('User not found');
+    }
+  }
+
+  async getFollowing(userId: string) {
+    try {
+      const userFromDb = await this.prismaService.user.findFirst({
+        where: {
+          id: userId,
+        },
+        select: {
+          following: true,
+        },
+      });
+
+      return userFromDb.following;
+    } catch {
+      throw new NotFoundException('User not found');
+    }
+  }
 }

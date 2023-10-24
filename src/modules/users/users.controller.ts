@@ -60,4 +60,14 @@ export class UsersController {
   async unfollow(@GetUser() user: IJwtUser, @Param('id') userId: string) {
     return this.userService.unfollow(userId, user);
   }
+
+  @Get('followers/:id')
+  async getFollowers(@Param('id') userId: string) {
+    return this.userService.getFollowers(userId);
+  }
+
+  @Get('following/:id')
+  async getFollowing(@Param('id') userId: string) {
+    return this.userService.getFollowing(userId);
+  }
 }
