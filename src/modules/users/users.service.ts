@@ -216,4 +216,31 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
   }
+
+  async unfollow(userId: string, user: IJwtUser) {
+    if (user.id === userId)
+      throw new BadRequestException('You cannot unfollow yourself');
+    try {
+      const userFromDb = await this.prismaService.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          followedBy: {
+            disconnect: {
+              id: user.id,
+            },
+          },
+        },
+        select: {
+          followedBy: true,
+          following: true,
+        },
+      });
+
+      return userFromDb;
+    } catch {
+      throw new NotFoundException('User not found');
+    }
+  }
 }
