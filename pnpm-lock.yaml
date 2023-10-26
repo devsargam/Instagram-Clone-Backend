@@ -68,8 +68,8 @@ devDependencies:
     specifier: ^5.0.0
     version: 5.0.1
   '@types/express':
-    specifier: ^4.17.17
-    version: 4.17.17
+    specifier: ^4.17.20
+    version: 4.17.20
   '@types/jest':
     specifier: ^29.5.6
     version: 29.5.6
@@ -1304,8 +1304,8 @@ packages:
       '@types/send': 0.17.2
     dev: true
 
-  /@types/express@4.17.17:
-    resolution: {integrity: sha512-Q4FmmuLGBG58btUnfS1c1r/NQdlp3DMfGDGig8WhfpA2YRUtEkxAjkZb0yvplJGYdF1fsQ81iMDcH24sSCNC/Q==}
+  /@types/express@4.17.20:
+    resolution: {integrity: sha512-rOaqlkgEvOW495xErXMsmyX3WKBInbhG5eqojXYi3cGUaLoRDlXa5d52fkfWZT963AZ3v2eZ4MbKE6WpDAGVsw==}
     dependencies:
       '@types/body-parser': 1.19.3
       '@types/express-serve-static-core': 4.17.37
@@ -1381,7 +1381,7 @@ packages:
   /@types/passport-jwt@3.0.10:
     resolution: {integrity: sha512-D2A911g2uiFsq/XXFBxQjcBcK4c6zPF2gAx9blEfz2AOXx5UUwsd8ZcMTcPe8z9dhW8LQBYLjv+vug2dvnRevA==}
     dependencies:
-      '@types/express': 4.17.17
+      '@types/express': 4.17.20
       '@types/jsonwebtoken': 9.0.2
       '@types/passport-strategy': 0.2.36
     dev: true
@@ -1389,7 +1389,7 @@ packages:
   /@types/passport-local@1.0.36:
     resolution: {integrity: sha512-NoL8ynRuzZHw/xUkLOTCscykNYlu6EasXKrGizF0ibMB+vq//big56+jgS2jtd9DZwL7q5fSJZDrZusex72Fjg==}
     dependencies:
-      '@types/express': 4.17.17
+      '@types/express': 4.17.20
       '@types/passport': 1.0.13
       '@types/passport-strategy': 0.2.36
     dev: true
@@ -1397,14 +1397,14 @@ packages:
   /@types/passport-strategy@0.2.36:
     resolution: {integrity: sha512-hotVZuaCt04LJYXfZD5B+5UeCcRVG8IjKaLLGTJ1eFp0wiFQA2XfsqslGGInWje+OysNNLPH/ducce5GXHDC1Q==}
     dependencies:
-      '@types/express': 4.17.17
+      '@types/express': 4.17.20
       '@types/passport': 1.0.13
     dev: true
 
   /@types/passport@1.0.13:
     resolution: {integrity: sha512-XXURryL+EZAWtbQFOHX1eNB+RJwz5XMPPz1xrGpEKr2xUZCXM4NCPkHMtZQ3B2tTSG/1IRaAcTHjczRA4sSFCw==}
     dependencies:
-      '@types/express': 4.17.17
+      '@types/express': 4.17.20
     dev: true
 
   /@types/qs@6.9.8:
