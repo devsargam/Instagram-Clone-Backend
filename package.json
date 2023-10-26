@@ -47,7 +47,7 @@
     "@types/node": "^20.8.8",
     "@types/nodemailer": "^6.4.11",
     "@types/passport-jwt": "^3.0.10",
-    "@types/passport-local": "^1.0.36",
+    "@types/passport-local": "^1.0.37",
     "@types/supertest": "^2.0.15",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.9.0",
