@@ -33,8 +33,8 @@ dependencies:
     specifier: ^5.1.1
     version: 5.1.1
   nodemailer:
-    specifier: ^6.9.6
-    version: 6.9.6
+    specifier: ^6.9.7
+    version: 6.9.7
   passport:
     specifier: ^0.6.0
     version: 0.6.0
@@ -77,8 +77,8 @@ devDependencies:
     specifier: ^20.8.9
     version: 20.8.9
   '@types/nodemailer':
-    specifier: ^6.4.11
-    version: 6.4.11
+    specifier: ^6.4.13
+    version: 6.4.13
   '@types/passport-jwt':
     specifier: ^3.0.10
     version: 3.0.10
@@ -1374,8 +1374,8 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/nodemailer@6.4.11:
-    resolution: {integrity: sha512-Ld2c0frwpGT4VseuoeboCXQ7UJIkK3X7Lx/4YsZEiUHtHsthWAOCYtf6PAiLhMtfwV0cWJRabLBS3+LD8x6Nrw==}
+  /@types/nodemailer@6.4.13:
+    resolution: {integrity: sha512-889Vq/77eEpidCwh52sVWpbnqQmIwL8yVBekNbrztVEaWKOCRH3Eq6hjIJh1jwsGDEAJEH0RR+YhpH9mfELLKA==}
     dependencies:
       '@types/node': 20.8.9
     dev: true
@@ -4487,8 +4487,8 @@ packages:
     resolution: {integrity: sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==}
     dev: true
 
-  /nodemailer@6.9.6:
-    resolution: {integrity: sha512-s7pDtWwe5fLMkQUhw8TkWB/wnZ7SRdd9HRZslq/s24hlZvBP3j32N/ETLmnqTpmj4xoBZL9fOWyCIZ7r2HORHg==}
+  /nodemailer@6.9.7:
+    resolution: {integrity: sha512-rUtR77ksqex/eZRLmQ21LKVH5nAAsVicAtAYudK7JgwenEDZ0UIQ1adUGqErz7sMkWYxWTTU1aeP2Jga6WQyJw==}
     engines: {node: '>=6.0.0'}
     dev: false
 
