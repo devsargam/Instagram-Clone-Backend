@@ -281,8 +281,33 @@ export class UsersService {
     }
   }
 
-  async uploadDp(file: Express.Multer.File) {
-    this.s3Service.uploadFile(file);
-    return 'ok';
+  async uploadDp(file: Express.Multer.File, user: IJwtUser) {
+    await this.s3Service.uploadFile(file, user);
+    await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        displayPictureUrl: this.s3Service.getImageUrl(user.username),
+      },
+    });
+    return {
+      message: 'Image uploaded',
+    };
+  }
+
+  async getDp(user: IJwtUser) {
+    const { displayPictureUrl } = await this.prismaService.user.findFirst({
+      where: {
+        id: user.id,
+      },
+      select: {
+        displayPictureUrl: true,
+      },
+    });
+    if (!displayPictureUrl) {
+      throw new NotFoundException('No DP found');
+    }
+    return { displayPictureUrl };
   }
 }

@@ -60,8 +60,12 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
     @GetUser() user: IJwtUser,
   ) {
-    file.originalname = user.username + '.png';
-    return await this.userService.uploadDp(file);
+    return await this.userService.uploadDp(file, user);
+  }
+
+  @Get('/dp')
+  async getDp(@GetUser() user: IJwtUser) {
+    return this.userService.getDp(user);
   }
 
   @Post('/:id/follow')
