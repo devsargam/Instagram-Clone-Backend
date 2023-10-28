@@ -32,6 +32,7 @@ export class S3Service {
         Bucket: this.bucketName,
         Key: originalname,
         Body: transformedImage,
+        ContentType: 'image/png',
       });
 
       const res = await this.client.send(command);
