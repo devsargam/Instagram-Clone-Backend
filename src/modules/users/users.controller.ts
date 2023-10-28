@@ -3,10 +3,13 @@ import {
   Controller,
   Get,
   Param,
+  ParseFilePipe,
   Post,
   Put,
   UploadedFile,
   UseInterceptors,
+  FileTypeValidator,
+  MaxFileSizeValidator,
   UsePipes,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -57,7 +60,20 @@ export class UsersController {
   @Post('/dp')
   @UseInterceptors(FileInterceptor('profile-pic'))
   async uploadDp(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: '.(png|jpeg|jpg|svg|avif|tiff|gif)',
+          }),
+          new MaxFileSizeValidator({
+            maxSize: 4 * 1024 * 1024,
+            message: 'Validation failed (expected size is less than 5MB)',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
     @GetUser() user: IJwtUser,
   ) {
     return await this.userService.uploadDp(file, user);
