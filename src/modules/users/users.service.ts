@@ -13,6 +13,7 @@ import { changeUsernameDto } from './dto/change-username.dto';
 import { IJwtUser } from 'src/shared/interfaces';
 import { editProfileDto } from './dto/edit-profile.dto';
 import { S3Service } from '../s3/s3.service';
+import * as sharp from 'sharp';
 
 export interface IUserFromDb {
   id: string;
@@ -282,7 +283,8 @@ export class UsersService {
   }
 
   async uploadDp(file: Express.Multer.File, user: IJwtUser) {
-    await this.s3Service.uploadFile(file, user);
+    const transformedImage = await this.transformImage(file.buffer);
+    await this.s3Service.uploadImage(transformedImage, `${user.username}.png`);
     await this.prismaService.user.update({
       where: {
         id: user.id,
@@ -309,5 +311,9 @@ export class UsersService {
       throw new NotFoundException('No DP found');
     }
     return { displayPictureUrl };
+  }
+
+  private async transformImage(image: Buffer) {
+    return await sharp(image).resize(320, 320).toBuffer();
   }
 }

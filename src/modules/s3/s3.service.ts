@@ -1,7 +1,6 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as sharp from 'sharp';
 import { IJwtUser } from 'src/shared/interfaces';
 
 @Injectable()
@@ -27,18 +26,12 @@ export class S3Service {
     });
   }
 
-  private async transformImage(image: Buffer) {
-    return await sharp(image).resize(320, 320).toBuffer();
-  }
-
-  async uploadFile(file: Express.Multer.File, user: IJwtUser) {
-    const { buffer } = file;
-    const transformedImage = await this.transformImage(buffer);
+  async uploadImage(image: Buffer, key: string) {
     try {
       const command = new PutObjectCommand({
         Bucket: this.bucketName,
-        Key: `${user.username}.png`,
-        Body: transformedImage,
+        Key: key,
+        Body: image,
         ContentType: 'image/png',
       });
 
