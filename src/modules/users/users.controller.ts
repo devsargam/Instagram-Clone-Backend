@@ -5,6 +5,8 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -17,6 +19,7 @@ import {
 import { editProfileDto, editProfileSchema } from './dto/edit-profile.dto';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { IJwtUser } from 'src/shared/interfaces';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
@@ -49,6 +52,16 @@ export class UsersController {
   @Get('/preferences/')
   async getProfile(@GetUser() user: IJwtUser) {
     return this.userService.getProfile(user);
+  }
+
+  @Post('/dp')
+  @UseInterceptors(FileInterceptor('profile-pic'))
+  async uploadDp(
+    @UploadedFile() file: Express.Multer.File,
+    @GetUser() user: IJwtUser,
+  ) {
+    file.originalname = user.username + '.png';
+    return await this.userService.uploadDp(file);
   }
 
   @Post('/:id/follow')

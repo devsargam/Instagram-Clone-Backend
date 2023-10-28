@@ -12,6 +12,7 @@ import { compare, hash } from 'bcrypt';
 import { changeUsernameDto } from './dto/change-username.dto';
 import { IJwtUser } from 'src/shared/interfaces';
 import { editProfileDto } from './dto/edit-profile.dto';
+import { S3Service } from '../s3/s3.service';
 
 export interface IUserFromDb {
   id: string;
@@ -23,7 +24,10 @@ export interface IUserFromDb {
 
 @Injectable()
 export class UsersService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   async getUserByEmail(email: string): Promise<IUserFromDb> {
     return await this.prismaService.user.findFirst({
@@ -275,5 +279,10 @@ export class UsersService {
     } catch {
       throw new NotFoundException('User not found');
     }
+  }
+
+  async uploadDp(file: Express.Multer.File) {
+    this.s3Service.uploadFile(file);
+    return 'ok';
   }
 }
