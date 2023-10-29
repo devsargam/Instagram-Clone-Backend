@@ -12,6 +12,8 @@ import { compare, hash } from 'bcrypt';
 import { changeUsernameDto } from './dto/change-username.dto';
 import { IJwtUser } from 'src/shared/interfaces';
 import { editProfileDto } from './dto/edit-profile.dto';
+import { S3Service } from '../s3/s3.service';
+import * as sharp from 'sharp';
 
 export interface IUserFromDb {
   id: string;
@@ -23,7 +25,10 @@ export interface IUserFromDb {
 
 @Injectable()
 export class UsersService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private readonly s3Service: S3Service,
+  ) {}
 
   async getUserByEmail(email: string): Promise<IUserFromDb> {
     return await this.prismaService.user.findFirst({
@@ -275,5 +280,40 @@ export class UsersService {
     } catch {
       throw new NotFoundException('User not found');
     }
+  }
+
+  async uploadDp(file: Express.Multer.File, user: IJwtUser) {
+    const transformedImage = await this.transformImage(file.buffer);
+    await this.s3Service.uploadImage(transformedImage, `${user.username}.png`);
+    await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        displayPictureUrl: this.s3Service.getImageUrl(user.username),
+      },
+    });
+    return {
+      message: 'Image uploaded',
+    };
+  }
+
+  async getDp(user: IJwtUser) {
+    const { displayPictureUrl } = await this.prismaService.user.findFirst({
+      where: {
+        id: user.id,
+      },
+      select: {
+        displayPictureUrl: true,
+      },
+    });
+    if (!displayPictureUrl) {
+      throw new NotFoundException('No DP found');
+    }
+    return { displayPictureUrl };
+  }
+
+  private async transformImage(image: Buffer) {
+    return await sharp(image).resize(320, 320).toBuffer();
   }
 }

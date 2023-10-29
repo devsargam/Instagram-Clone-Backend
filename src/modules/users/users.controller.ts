@@ -3,8 +3,13 @@ import {
   Controller,
   Get,
   Param,
+  ParseFilePipe,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
+  FileTypeValidator,
+  MaxFileSizeValidator,
   UsePipes,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -17,6 +22,7 @@ import {
 import { editProfileDto, editProfileSchema } from './dto/edit-profile.dto';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { IJwtUser } from 'src/shared/interfaces';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
@@ -49,6 +55,33 @@ export class UsersController {
   @Get('/preferences/')
   async getProfile(@GetUser() user: IJwtUser) {
     return this.userService.getProfile(user);
+  }
+
+  @Post('/dp')
+  @UseInterceptors(FileInterceptor('profile-pic'))
+  async uploadDp(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({
+            fileType: '.(png|jpeg|jpg|svg|avif|tiff|gif)',
+          }),
+          new MaxFileSizeValidator({
+            maxSize: 4 * 1024 * 1024,
+            message: 'Validation failed (expected size is less than 5MB)',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @GetUser() user: IJwtUser,
+  ) {
+    return await this.userService.uploadDp(file, user);
+  }
+
+  @Get('/dp')
+  async getDp(@GetUser() user: IJwtUser) {
+    return this.userService.getDp(user);
   }
 
   @Post('/:id/follow')

@@ -9,6 +9,7 @@ import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 import { MailModule } from './modules/mail/mail.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { CommentsModule } from './modules/comments/comments.module';
+import { S3Module } from './modules/s3/s3.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CommentsModule } from './modules/comments/comments.module';
     MailModule,
     PostsModule,
     CommentsModule,
+    S3Module,
   ],
   controllers: [AppController],
   providers: [

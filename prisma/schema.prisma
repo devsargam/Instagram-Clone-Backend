@@ -11,11 +11,12 @@ datasource db {
 }
 
 model User {
-  id         String  @id @default(uuid())
-  email      String  @unique
-  username   String  @unique
-  password   String
-  isVerified Boolean @default(false)
+  id                String  @id @default(uuid())
+  email             String  @unique
+  username          String  @unique
+  password          String
+  isVerified        Boolean @default(false)
+  displayPictureUrl String?
 
   createdPosts Post[]    @relation("Created")
   savedPosts   Post[]    @relation("Posts")
