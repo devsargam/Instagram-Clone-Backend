@@ -33,6 +33,7 @@ model Post {
   id        String   @id @default(uuid())
   title     String
   caption   String
+  imagesKey String[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
