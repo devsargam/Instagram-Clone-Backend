@@ -1,4 +1,8 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -42,5 +46,17 @@ export class S3Service {
 
   getImageUrl(key: string) {
     return `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${key}.png`;
+  }
+
+  async removeImage(key: string) {
+    try {
+      const commmand = new DeleteObjectCommand({
+        Bucket: this.bucketName,
+        Key: `${key}.png`,
+      });
+      await this.client.send(commmand);
+    } catch {
+      throw new InternalServerErrorException();
+    }
   }
 }

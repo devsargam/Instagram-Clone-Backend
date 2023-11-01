@@ -81,12 +81,18 @@ export class PostsService {
 
   async remove(id: string, user: IJwtUser) {
     try {
-      return await this.prismaService.post.delete({
+      const removedPost = await this.prismaService.post.delete({
         where: {
           id: id,
           authorId: user.id,
         },
       });
+
+      for (const key of removedPost.imagesKey) {
+        await this.s3Service.removeImage(key);
+      }
+
+      return removedPost;
     } catch {
       throw new NotFoundException('Post not found');
     }
