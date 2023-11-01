@@ -20,9 +20,11 @@ export class PostsService {
     images: Express.Multer.File[],
   ) {
     const imageKeys: string[] = [];
+    const imageUrls: string[] = [];
     for (const image of images) {
       const imgUUID = uuid();
       imageKeys.push(imgUUID);
+      imageUrls.push(this.s3Service.getImageUrl(imgUUID));
       const optimizedImg = await this.transformImage(image.buffer);
       this.s3Service.uploadImage(optimizedImg, `${imgUUID}.png`);
     }
@@ -31,6 +33,7 @@ export class PostsService {
         ...createPostDto,
         authorId: user.id,
         imagesKey: imageKeys,
+        imagesUrl: imageUrls,
       },
     });
     return newPost;
