@@ -1,7 +1,6 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IJwtUser } from 'src/shared/interfaces';
 
 @Injectable()
 export class S3Service {

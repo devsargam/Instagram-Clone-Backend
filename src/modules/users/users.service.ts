@@ -13,6 +13,7 @@ import { changeUsernameDto } from './dto/change-username.dto';
 import { IJwtUser } from 'src/shared/interfaces';
 import { editProfileDto } from './dto/edit-profile.dto';
 import { S3Service } from '../s3/s3.service';
+import { randomUUID as uuid } from 'crypto';
 import * as sharp from 'sharp';
 
 export interface IUserFromDb {
@@ -284,13 +285,14 @@ export class UsersService {
 
   async uploadDp(file: Express.Multer.File, user: IJwtUser) {
     const transformedImage = await this.transformImage(file.buffer);
-    await this.s3Service.uploadImage(transformedImage, `${user.username}.png`);
+    const imageUUID = uuid();
+    await this.s3Service.uploadImage(transformedImage, `${imageUUID}.png`);
     await this.prismaService.user.update({
       where: {
         id: user.id,
       },
       data: {
-        displayPictureUrl: this.s3Service.getImageUrl(user.username),
+        displayPictureUrl: this.s3Service.getImageUrl(imageUUID),
       },
     });
     return {
