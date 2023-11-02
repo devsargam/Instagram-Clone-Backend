@@ -293,6 +293,7 @@ export class UsersService {
       },
       data: {
         displayPictureUrl: this.s3Service.getImageUrl(imageUUID),
+        displayPictureKey: imageUUID,
       },
     });
     return {
@@ -307,6 +308,7 @@ export class UsersService {
       },
       select: {
         displayPictureUrl: true,
+        displayPictureKey: true,
       },
     });
     if (!displayPictureUrl) {

@@ -17,6 +17,7 @@ model User {
   password          String
   isVerified        Boolean @default(false)
   displayPictureUrl String?
+  displayPictureKey String?
 
   createdPosts Post[]    @relation("Created")
   savedPosts   Post[]    @relation("Posts")
@@ -33,6 +34,8 @@ model Post {
   id        String   @id @default(uuid())
   title     String
   caption   String
+  imagesKey String[]
+  imagesUrl String[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

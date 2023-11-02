@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UsePipes,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
@@ -18,6 +20,7 @@ import {
   updatePostSchema,
 } from './dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod.pipe';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')
 export class PostsController {
@@ -25,8 +28,13 @@ export class PostsController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(createPostSchema))
-  create(@Body() createPostDto: CreatePostDto, @GetUser() user: IJwtUser) {
-    return this.postsService.create(user, createPostDto);
+  @UseInterceptors(FilesInterceptor('images', 10))
+  create(
+    @Body() createPostDto: CreatePostDto,
+    @GetUser() user: IJwtUser,
+    @UploadedFiles() images: Express.Multer.File[],
+  ) {
+    return this.postsService.create(user, createPostDto, images);
   }
 
   @Get()
