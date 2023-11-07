@@ -74,8 +74,8 @@ devDependencies:
     specifier: ^5.0.0
     version: 5.0.1
   '@types/express':
-    specifier: ^4.17.20
-    version: 4.17.20
+    specifier: ^4.17.21
+    version: 4.17.21
   '@types/jest':
     specifier: ^29.5.7
     version: 29.5.7
@@ -2308,8 +2308,8 @@ packages:
       '@types/send': 0.17.2
     dev: true
 
-  /@types/express@4.17.20:
-    resolution: {integrity: sha512-rOaqlkgEvOW495xErXMsmyX3WKBInbhG5eqojXYi3cGUaLoRDlXa5d52fkfWZT963AZ3v2eZ4MbKE6WpDAGVsw==}
+  /@types/express@4.17.21:
+    resolution: {integrity: sha512-ejlPM315qwLpaQlQDTjPdsUFSc6ZsP4AN6AlWnogPjQ7CVi7PYF3YVz+CY3jE2pwYf7E/7HlDAN0rV2GxTG0HQ==}
     dependencies:
       '@types/body-parser': 1.19.3
       '@types/express-serve-static-core': 4.17.37
@@ -2370,7 +2370,7 @@ packages:
   /@types/multer@1.4.10:
     resolution: {integrity: sha512-6l9mYMhUe8wbnz/67YIjc7ZJyQNZoKq7fRXVf7nMdgWgalD0KyzJ2ywI7hoATUSXSbTu9q2HBiEwzy0tNN1v2w==}
     dependencies:
-      '@types/express': 4.17.20
+      '@types/express': 4.17.21
     dev: true
 
   /@types/node@20.8.10:
@@ -2387,7 +2387,7 @@ packages:
   /@types/passport-jwt@3.0.12:
     resolution: {integrity: sha512-nXCd1lu20rw//nZ5AnK1FnlVZdSC4R5xksquev9oAJlXwJw0irMdZ7dRAE4KDlalptKObiaoam6BQ8lpujeZog==}
     dependencies:
-      '@types/express': 4.17.20
+      '@types/express': 4.17.21
       '@types/jsonwebtoken': 9.0.2
       '@types/passport-strategy': 0.2.36
     dev: true
@@ -2395,7 +2395,7 @@ packages:
   /@types/passport-local@1.0.38:
     resolution: {integrity: sha512-nsrW4A963lYE7lNTv9cr5WmiUD1ibYJvWrpE13oxApFsRt77b0RdtZvKbCdNIY4v/QZ6TRQWaDDEwV1kCTmcXg==}
     dependencies:
-      '@types/express': 4.17.20
+      '@types/express': 4.17.21
       '@types/passport': 1.0.13
       '@types/passport-strategy': 0.2.36
     dev: true
@@ -2403,14 +2403,14 @@ packages:
   /@types/passport-strategy@0.2.36:
     resolution: {integrity: sha512-hotVZuaCt04LJYXfZD5B+5UeCcRVG8IjKaLLGTJ1eFp0wiFQA2XfsqslGGInWje+OysNNLPH/ducce5GXHDC1Q==}
     dependencies:
-      '@types/express': 4.17.20
+      '@types/express': 4.17.21
       '@types/passport': 1.0.13
     dev: true
 
   /@types/passport@1.0.13:
     resolution: {integrity: sha512-XXURryL+EZAWtbQFOHX1eNB+RJwz5XMPPz1xrGpEKr2xUZCXM4NCPkHMtZQ3B2tTSG/1IRaAcTHjczRA4sSFCw==}
     dependencies:
-      '@types/express': 4.17.20
+      '@types/express': 4.17.21
     dev: true
 
   /@types/qs@6.9.8:
