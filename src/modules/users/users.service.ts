@@ -283,6 +283,64 @@ export class UsersService {
     }
   }
 
+  async getCurrentUser(id: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id },
+      select: {
+        email: true,
+        username: true,
+        id: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  async findProfile(username: string, user: IJwtUser) {
+    const userFromDb = await this.prismaService.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+        username: true,
+        displayPictureUrl: true,
+        UserPreferences: {
+          select: {
+            accountType: true,
+            bio: true,
+            gender: true,
+            website: true,
+          },
+        },
+        _count: {
+          select: { createdPosts: true, followedBy: true, following: true },
+        },
+      },
+    });
+
+    const isFollowedByUser = await this.prismaService.user.findFirst({
+      where: {
+        username: user.username,
+        following: {
+          some: {
+            username: username,
+          },
+        },
+      },
+    });
+
+    if (!userFromDb) {
+      throw new NotFoundException('User Not Found');
+    }
+
+    return { ...userFromDb, isFollowedByUser: !!isFollowedByUser };
+  }
+
   async uploadDp(file: Express.Multer.File, user: IJwtUser) {
     const transformedImage = await this.transformImage(file.buffer);
     const imageUUID = uuid();

@@ -55,7 +55,28 @@ export class PostsService {
     try {
       return await this.prismaService.post.findFirstOrThrow({
         where: {
-          id: id,
+          id,
+        },
+        select: {
+          id: true,
+          title: true,
+          caption: true,
+          imagesUrl: true,
+          author: {
+            select: {
+              id: true,
+              username: true,
+              displayPictureUrl: true,
+            },
+          },
+          _count: {
+            select: {
+              comments: true,
+              likes: true,
+            },
+          },
+          createdAt: true,
+          updatedAt: true,
         },
       });
     } catch {
@@ -98,6 +119,42 @@ export class PostsService {
     }
   }
 
+  async getParticularUserPosts(username: string) {
+    const posts = await this.prismaService.post.findMany({
+      where: {
+        author: {
+          username: username,
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        caption: true,
+        imagesUrl: true,
+        author: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!posts) {
+      return [];
+    }
+
+    return posts;
+  }
+
   async like(id: string, user: IJwtUser) {
     try {
       await this.prismaService.user.update({
@@ -118,6 +175,32 @@ export class PostsService {
         message: 'Post liked successfully',
         postId: id,
         timestamp: new Date(),
+      };
+    } catch {
+      throw new NotFoundException('Post not found');
+    }
+  }
+
+  async isLiked(id: string, user: IJwtUser) {
+    try {
+      const likedPost = await this.prismaService.user.findFirst({
+        where: {
+          id: user.id,
+          likedPosts: {
+            some: {
+              id: id,
+            },
+          },
+        },
+      });
+
+      if (likedPost) {
+        return {
+          liked: true,
+        };
+      }
+      return {
+        liked: false,
       };
     } catch {
       throw new NotFoundException('Post not found');

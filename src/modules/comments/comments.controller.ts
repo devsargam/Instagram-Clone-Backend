@@ -45,6 +45,11 @@ export class CommentsController {
     return this.commentsService.update(id, updateCommentDto, user);
   }
 
+  @Get('/posts/:postId')
+  getPostComments(@Param('postId') postId: string) {
+    return this.commentsService.getPostComments(postId);
+  }
+
   @Delete(':commentId')
   remove(@Param('commentId') id: string, @GetUser() user: IJwtUser) {
     return this.commentsService.remove(id, user);

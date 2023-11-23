@@ -87,4 +87,26 @@ export class CommentsService {
       throw new ForbiddenException('Something wrong happened');
     }
   }
+
+  async getPostComments(postId: string) {
+    try {
+      const comments = await this.prismaService.comment.findMany({
+        where: {
+          postId: postId,
+        },
+        select: {
+          content: true,
+          commenedBy: {
+            select: {
+              username: true,
+              displayPictureUrl: true,
+            },
+          },
+        },
+      });
+      return comments ?? [];
+    } catch {
+      throw new ForbiddenException('Something went wrong');
+    }
+  }
 }

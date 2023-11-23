@@ -12,6 +12,6 @@ COPY . ./
 RUN pnpm build \
   pnpm dlx prisma migrate deploy
 
-EXPOSE 3000
+EXPOSE 8000
 
 CMD [ "pnpm", "start:prod" ]

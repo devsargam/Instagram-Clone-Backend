@@ -62,9 +62,19 @@ export class PostsController {
     return this.postsService.remove(id, user);
   }
 
+  @Get('/users/:username')
+  async getParticularUserPosts(@Param('username') username: string) {
+    return this.postsService.getParticularUserPosts(username);
+  }
+
   @Post(':id/like')
   like(@Param('id') id: string, @GetUser() user: IJwtUser) {
     return this.postsService.like(id, user);
+  }
+
+  @Get(':id/isLiked')
+  isLike(@Param('id') id: string, @GetUser() user: IJwtUser) {
+    return this.postsService.isLiked(id, user);
   }
 
   @Post(':id/removelike')

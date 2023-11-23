@@ -46,6 +46,11 @@ export class UsersController {
     return this.userService.changeUsername(userId, body);
   }
 
+  @Get('/me')
+  async getCurrentUser(@GetUser() user: IJwtUser) {
+    return this.userService.getCurrentUser(user.id);
+  }
+
   @Post('/preferences')
   @UsePipes(new ZodValidationPipe(editProfileSchema))
   async editProfile(@Body() body: editProfileDto, @GetUser() user: IJwtUser) {
@@ -102,5 +107,13 @@ export class UsersController {
   @Get('following/:id')
   async getFollowing(@Param('id') userId: string) {
     return this.userService.getFollowing(userId);
+  }
+
+  @Get('profile/:username')
+  async findProfile(
+    @Param('username') username: string,
+    @GetUser() user: IJwtUser,
+  ) {
+    return this.userService.findProfile(username, user);
   }
 }
