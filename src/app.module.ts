@@ -10,6 +10,7 @@ import { MailModule } from './modules/mail/mail.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { S3Module } from './modules/s3/s3.module';
+import { FeedModule } from './feed/feed.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { S3Module } from './modules/s3/s3.module';
     PostsModule,
     CommentsModule,
     S3Module,
+    FeedModule,
   ],
   controllers: [AppController],
   providers: [
