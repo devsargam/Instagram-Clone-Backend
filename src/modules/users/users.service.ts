@@ -196,13 +196,13 @@ export class UsersService {
     return newUser;
   }
 
-  async follow(userId: string, user: IJwtUser) {
-    if (user.id === userId)
+  async follow(username: string, user: IJwtUser) {
+    if (user.username === username)
       throw new BadRequestException('You cannot follow yourself');
     try {
       const userFromDb = await this.prismaService.user.update({
         where: {
-          id: userId,
+          username: username,
         },
         data: {
           followedBy: {
@@ -223,13 +223,13 @@ export class UsersService {
     }
   }
 
-  async unfollow(userId: string, user: IJwtUser) {
-    if (user.id === userId)
+  async unfollow(username: string, user: IJwtUser) {
+    if (user.username === username)
       throw new BadRequestException('You cannot unfollow yourself');
     try {
       const userFromDb = await this.prismaService.user.update({
         where: {
-          id: userId,
+          username: username,
         },
         data: {
           followedBy: {
@@ -250,11 +250,11 @@ export class UsersService {
     }
   }
 
-  async getFollowers(userId: string) {
+  async getFollowers(username: string) {
     try {
       const userFromDb = await this.prismaService.user.findFirst({
         where: {
-          id: userId,
+          username: username,
         },
         select: {
           followedBy: true,
@@ -266,11 +266,11 @@ export class UsersService {
     }
   }
 
-  async getFollowing(userId: string) {
+  async getFollowing(username: string) {
     try {
       const userFromDb = await this.prismaService.user.findFirst({
         where: {
-          id: userId,
+          username: username,
         },
         select: {
           following: true,
@@ -290,6 +290,7 @@ export class UsersService {
         email: true,
         username: true,
         id: true,
+        displayPictureUrl: true,
       },
     });
 

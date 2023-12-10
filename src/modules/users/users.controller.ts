@@ -89,24 +89,27 @@ export class UsersController {
     return this.userService.getDp(user);
   }
 
-  @Post('/:id/follow')
-  async follow(@GetUser() user: IJwtUser, @Param('id') userId: string) {
-    return this.userService.follow(userId, user);
+  @Post('/:username/follow')
+  async follow(@GetUser() user: IJwtUser, @Param('username') username: string) {
+    return this.userService.follow(username, user);
   }
 
-  @Post('/:id/unfollow')
-  async unfollow(@GetUser() user: IJwtUser, @Param('id') userId: string) {
-    return this.userService.unfollow(userId, user);
+  @Post('/:username/unfollow')
+  async unfollow(
+    @GetUser() user: IJwtUser,
+    @Param('username') username: string,
+  ) {
+    return this.userService.unfollow(username, user);
   }
 
-  @Get('followers/:id')
-  async getFollowers(@Param('id') userId: string) {
-    return this.userService.getFollowers(userId);
+  @Get('followers/:username')
+  async getFollowers(@Param('id') username: string) {
+    return this.userService.getFollowers(username);
   }
 
-  @Get('following/:id')
-  async getFollowing(@Param('id') userId: string) {
-    return this.userService.getFollowing(userId);
+  @Get('following/:username')
+  async getFollowing(@Param('id') username: string) {
+    return this.userService.getFollowing(username);
   }
 
   @Get('profile/:username')
