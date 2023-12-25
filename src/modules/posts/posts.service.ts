@@ -284,6 +284,6 @@ export class PostsService {
   }
 
   private async transformImage(image: Buffer) {
-    return await sharp(image).resize(320, 320).toBuffer();
+    return await sharp(image).resize(478, 478).toBuffer();
   }
 }
